@@ -1,0 +1,159 @@
+{
+  "_comentario": "Configuração do importador automático de vídeos do YouTube para o LingQ. Edite valores conforme necessário.",
+  "videos_por_canal": 1,
+  "_videos_por_canal": "Quantos vídeos mais recentes de cada canal importar a cada execução (1 = só o mais recente).",
+  "edge_profile_dir": "C:/Users/ggamp/Documents/Claude/Projects/Importar vídeos na plataforma Lingq.com/edge_profile",
+  "_edge_profile_dir": "Pasta isolada onde o Edge automatizado guarda perfil, cookies do LingQ e a extensão. NÃO use seu perfil principal — use este perfil dedicado.",
+  "edge_executable": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+  "_edge_executable": "Caminho do executável do Edge. Padrão para Windows 64-bit.",
+  "headless": false,
+  "_headless": "false = mostra o browser (recomendado para debug). true = roda em segundo plano (mais rápido, mas se a sessão LingQ expirar você não verá).",
+  "timeout_extensao_segundos": 25,
+  "_timeout_extensao_segundos": "Quantos segundos esperar pela extensão LingQ aparecer e processar o import.",
+  "delay_entre_videos_segundos": 5,
+  "_delay_entre_videos_segundos": "Pausa entre cada importação para não sobrecarregar o LingQ.",
+  "validar_importados_no_lingq": true,
+  "_validar_importados_no_lingq": "true = antes de importar, tenta consultar a biblioteca do LingQ para evitar duplicatas mesmo quando history.json nao tem o video.",
+  "validacao_lingq_max_colecoes": 40,
+  "_validacao_lingq_max_colecoes": "Limite de colecoes/cursos consultados na API do LingQ durante a validacao remota.",
+  "youtube_cookies_file": "youtube_cookies.txt",
+  "_youtube_cookies_file": "Arquivo Netscape cookies.txt usado pelo yt-dlp para evitar bloqueios anti-bot do YouTube em VPS.",
+  "transcrever_sem_legenda": true,
+  "_transcrever_sem_legenda": "true = se o YouTube nao entregar legenda, baixa o audio e tenta gerar VTT por IA.",
+  "transcricao_modelo": "whisper-1",
+  "_transcricao_modelo": "Modelo da API OpenAI para transcricao. Configure OPENAI_API_KEY no ambiente da VPS ou openai_api_key neste config.",
+  "transcricao_max_audio_mb": 24,
+  "_transcricao_max_audio_mb": "Limite de tamanho do audio enviado para transcricao.",
+  "canais": [
+    {
+      "idioma": "espanhol",
+      "lang_code": "es",
+      "url": "https://www.youtube.com/@juanrallo",
+      "nome": "Juan Ramón Rallo",
+      "id": "129645cf7cc645a2bf78b969fa46e5cc",
+      "ativo": false,
+      "videos_por_execucao": 3
+    },
+    {
+      "idioma": "espanhol",
+      "lang_code": "es",
+      "url": "https://www.youtube.com/@Linguriosa",
+      "nome": "Linguriosa",
+      "id": "a245ba37802343ef85ddfddccc109ceb",
+      "ativo": false,
+      "videos_por_execucao": 3
+    },
+    {
+      "idioma": "italiano",
+      "lang_code": "it",
+      "url": "https://www.youtube.com/@Dr.GennaroRomagnoli",
+      "nome": "Dr. Gennaro Romagnoli - PsiNel",
+      "id": "82c669aaa54344b09d2e7bb1ef11dda4",
+      "ativo": false,
+      "videos_por_execucao": 5
+    },
+    {
+      "idioma": "italiano",
+      "lang_code": "it",
+      "url": "https://www.youtube.com/@alessandrodeconcini-adc",
+      "nome": "Alessandro de Concini - ADC",
+      "id": "47df0cecbbba4972a40ecfb47b9777d2",
+      "ativo": false,
+      "videos_por_execucao": 5
+    },
+    {
+      "idioma": "italiano",
+      "lang_code": "it",
+      "url": "https://www.youtube.com/@EasyItalian",
+      "nome": "Easy Italian",
+      "id": "fd401bab8a2c430d8ca6b9712b38ee3d",
+      "ativo": false,
+      "videos_por_execucao": 10
+    },
+    {
+      "idioma": "frances",
+      "lang_code": "fr",
+      "url": "https://www.youtube.com/@francaisavecnelly",
+      "nome": "Français avec Nelly",
+      "id": "c67e38b955ee4a00ba0483197473b254",
+      "ativo": false,
+      "videos_por_execucao": 10
+    },
+    {
+      "idioma": "frances",
+      "lang_code": "fr",
+      "url": "https://www.youtube.com/@EasyFrench",
+      "nome": "Easy French",
+      "id": "cbbfb35b77ae4b4ca600e11ed6f1e8e2",
+      "ativo": false,
+      "videos_por_execucao": 6
+    },
+    {
+      "idioma": "frances",
+      "lang_code": "fr",
+      "url": "https://www.youtube.com/@Shannenlouiz",
+      "nome": "Shannen Louiz Boutaleb - SforSales",
+      "id": "8595d7d8b5884605963d3e10a165ce0a",
+      "ativo": false,
+      "videos_por_execucao": 1
+    },
+    {
+      "idioma": "frances",
+      "lang_code": "fr",
+      "url": "https://www.youtube.com/@GaspardFran%C3%A7ais",
+      "nome": "Gaspard Français",
+      "id": "cb5e4aebda6843afb8493634d22534a9",
+      "ativo": false,
+      "videos_por_execucao": 10
+    },
+    {
+      "idioma": "ingles",
+      "lang_code": "en",
+      "url": "https://www.youtube.com/@Speakconfidentenglish",
+      "nome": "Speak Confident English",
+      "id": "7f7d28734e6e416e80873487b22a98d6",
+      "ativo": true,
+      "videos_por_execucao": 10
+    },
+    {
+      "idioma": "ingles",
+      "lang_code": "en",
+      "url": "https://www.youtube.com/@askvinh",
+      "nome": "Vinh Giang",
+      "id": "b1a10a5addd948de9b1dde60091c23d2",
+      "ativo": false,
+      "videos_por_execucao": 1
+    },
+    {
+      "idioma": "ingles",
+      "lang_code": "en",
+      "url": "https://www.youtube.com/@leilahormozi",
+      "nome": "Leila Hormozi",
+      "id": "2280fb7a81694a0ca67c2a41422efc6c",
+      "ativo": false,
+      "videos_por_execucao": 1
+    },
+    {
+      "idioma": "ingles",
+      "lang_code": "en",
+      "url": "https://www.youtube.com/@TinaHuang1",
+      "nome": "Tina Huang",
+      "id": "2b33625ddfc0459f92a2d135e91ed6ce",
+      "ativo": false,
+      "videos_por_execucao": 1
+    },
+    {
+      "idioma": "ingles",
+      "lang_code": "en",
+      "url": "https://www.youtube.com/@veronika_mark",
+      "nome": "Veronika Mark",
+      "id": "68188607c1b14d9dbf6fcfd800768e88",
+      "ativo": false,
+      "videos_por_execucao": 1
+    }
+  ],
+  "lingq_cookies": {
+    "wwwlingqcomsa": "q0bjxf9qs1ec6np7f7f0fmvjr0rq8ms0",
+    "csrftoken": "uQPwAM4kcrq5601uQaFn0hxRi497cAke"
+  }
+}

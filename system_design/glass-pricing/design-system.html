@@ -1,0 +1,1103 @@
+<html lang="en"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Design System - StreamFlow AI</title>
+<link href="assets/css2_4eed9c50e3bb.css" rel="stylesheet"/>
+<link href="assets/all_50a9bdd31fbf.css" rel="stylesheet"/>
+<script src="assets/resource_3fa48481346f.js"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: {
+500: 'hsl(260, 95%, 63%)', // purple
+600: 'hsl(250, 95%, 58%)', // darker purple
+700: 'hsl(270, 95%, 68%)', // lighter purple
+},
+secondary: {
+800: 'hsl(280, 90%, 80%)', // light purple
+},
+darkGray: {
+50: 'hsl(225, 20%, 10%)', // dark purple-tinted gray
+100: 'hsl(225, 15%, 15%)', // slightly lighter
+}
+},
+fontFamily: {
+jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+inter: ['Inter', 'sans-serif'],
+}
+}
+}
+}
+</script>
+<style>
+.glass-effect {
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+}
+.gradient-text {
+background-clip: text;
+-webkit-background-clip: text;
+color: transparent;
+}
+.modal-card {
+width: 32em;
+max-width: 90vw;
+min-height: 32em;
+border-radius: 1.5em;
+}
+.card-content-gradient {
+background-image: linear-gradient(to bottom, rgba(255,255,255,0) 3.125em, hsl(270, 95%, 68%) 3.375em, hsl(280, 90%, 80%) 4.5em ),
+linear-gradient(to right, hsl(280, 90%, 80%) 19.5em, hsl(270, 95%, 68%) calc(100% - 6em), rgba(255,255,255,0) 28.65em ),
+linear-gradient(to right, rgba(255,255,255,0.5) 6em, rgba(255,255,255,0.2) );
+background-size: calc(100% - 6em) 35%, 100% 35%, 100% 100%;
+background-position: 0 0, 0 100%, 0 0;
+background-repeat: no-repeat;
+-webkit-background-clip: text;
+background-clip: text;
+}
+.card-divider {
+height: 1px;
+background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.3) 20%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 80%, transparent);
+}
+.price-value {
+font-size: 2.5rem;
+font-weight: 600;
+line-height: 1;
+}
+.feature-label {
+font-size: 0.8rem;
+opacity: 0.9;
+line-height: 1.3;
+}
+.glow {
+box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+}
+.icon-circle {
+height: 2.5rem;
+width: 2.5rem;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: rgba(255,255,255,0.12);
+border: 1px solid rgba(255,255,255,0.25);
+}
+.payment-method {
+background: rgba(255,255,255,0.08);
+border: 1px solid rgba(255,255,255,0.15);
+transition: all 0.3s ease;
+}
+.payment-method:hover {
+background: rgba(255,255,255,0.12);
+border-color: rgba(139, 92, 246, 0.4);
+}
+.payment-method.selected {
+background: rgba(139, 92, 246, 0.15);
+border-color: rgba(139, 92, 246, 0.5);
+}
+.glass-button {
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+transition: all 0.3s ease;
+}
+.glass-button:hover {
+transform: translateY(-1px);
+}
+.scrollable-content {
+scrollbar-width: thin;
+scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+}
+.scrollable-content::-webkit-scrollbar {
+width: 6px;
+}
+.scrollable-content::-webkit-scrollbar-track {
+background: rgba(255, 255, 255, 0.05);
+border-radius: 3px;
+}
+.scrollable-content::-webkit-scrollbar-thumb {
+background: rgba(139, 92, 246, 0.5);
+border-radius: 3px;
+}
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+background: rgba(139, 92, 246, 0.7);
+}
+
+/* Design System Specific Styles */
+.ds-nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+background: rgba(15, 15, 25, 0.8);
+border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ds-section {
+padding: 6rem 2rem;
+max-width: 1400px;
+margin: 0 auto;
+}
+.ds-section-title {
+font-size: 2.5rem;
+font-weight: 600;
+margin-bottom: 3rem;
+font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.ds-card {
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 1.5rem;
+padding: 2rem;
+margin-bottom: 2rem;
+}
+.ds-spec-row {
+display: flex;
+align-items: center;
+padding: 1.5rem 0;
+border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ds-spec-row:last-child {
+border-bottom: none;
+}
+.ds-spec-name {
+flex: 0 0 200px;
+font-size: 0.875rem;
+opacity: 0.7;
+font-weight: 500;
+}
+.ds-spec-preview {
+flex: 1;
+padding: 0 2rem;
+}
+.ds-spec-value {
+flex: 0 0 150px;
+text-align: right;
+font-size: 0.875rem;
+opacity: 0.5;
+font-family: monospace;
+}
+.ds-color-swatch {
+width: 100%;
+height: 80px;
+border-radius: 0.75rem;
+margin-bottom: 0.5rem;
+border: 1px solid rgba(255,255,255,0.1);
+}
+.ds-component-state {
+display: inline-flex;
+flex-direction: column;
+gap: 0.5rem;
+margin: 1rem;
+}
+.ds-state-label {
+font-size: 0.75rem;
+opacity: 0.6;
+text-align: center;
+}
+.motion-demo-box {
+width: 120px;
+height: 120px;
+background: rgba(139, 92, 246, 0.3);
+border: 1px solid rgba(139, 92, 246, 0.5);
+border-radius: 1rem;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 1rem;
+}
+html {
+scroll-behavior: smooth;
+scroll-padding-top: 80px;
+}
+</style>
+</head>
+<body class="bg-gradient-to-br from-darkGray-100 via-darkGray-50 to-slate-900 text-white font-inter">
+
+<!-- Navigation -->
+<nav class="ds-nav">
+<div class="max-w-7xl mx-auto px-6 py-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="icon-circle shadow-lg">
+<i class="fas fa-palette text-lg text-primary-300"></i>
+</div>
+<h1 class="text-xl font-semibold font-jakarta">StreamFlow Design System</h1>
+</div>
+<div class="flex gap-6 text-sm">
+<a href="#hero" class="opacity-70 hover:opacity-100 transition-opacity">Hero</a>
+<a href="#typography" class="opacity-70 hover:opacity-100 transition-opacity">Typography</a>
+<a href="#colors" class="opacity-70 hover:opacity-100 transition-opacity">Colors</a>
+<a href="#components" class="opacity-70 hover:opacity-100 transition-opacity">Components</a>
+<a href="#layout" class="opacity-70 hover:opacity-100 transition-opacity">Layout</a>
+<a href="#motion" class="opacity-70 hover:opacity-100 transition-opacity">Motion</a>
+<a href="#icons" class="opacity-70 hover:opacity-100 transition-opacity">Icons</a>
+</div>
+</div>
+</div>
+</nav>
+
+<!-- Animated Background -->
+<div class="fixed inset-0 -z-10">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"></div>
+<div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
+</div>
+
+<!-- Hero Section - Exact Clone -->
+<section id="hero" class="min-h-screen flex items-center justify-center p-4 relative" style="margin-top: 80px;">
+<div class="relative">
+<!-- Base Card (Purple) - Moved to right -->
+<div class="modal-card absolute glow z-0 h-2/3 shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] bg-[url(https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/e923ad25-c307-4eeb-a564-655c0bce21f7_1600w.jpg)] bg-cover translate-x-20 translate-y-28"></div>
+
+<!-- Glass Modal -->
+<div class="modal-card glass-effect overflow-hidden relative z-10 shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] bg-gradient-to-r from-white/20 to-white/5 backdrop-blur-3xl top-8">
+<!-- Border overlay -->
+<div class="absolute inset-0 rounded-[1.5em] border border-white/50 [mask-image:linear-gradient(135deg,white,transparent_50%)]"></div>
+<div class="absolute inset-0 rounded-[1.5em] border border-primary-500/50 [mask-image:linear-gradient(135deg,transparent_50%,white)]"></div>
+
+<!-- Content -->
+<div class="flex flex-col h-full card-content-gradient relative">
+<!-- Header -->
+<div class="flex pt-6 pr-6 pb-0 pl-6 items-start justify-between">
+<div class="flex items-center gap-4">
+<div class="icon-circle shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)]">
+<i class="fas fa-palette text-lg text-primary-300"></i>
+</div>
+<div>
+<h1 class="text-2xl font-semibold font-jakarta tracking-tight">Design System</h1>
+<p class="text-sm opacity-80">Glassmorphic interface components</p>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
+<i class="fas fa-times text-sm opacity-60 hover:opacity-100"></i>
+</button>
+</div>
+
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto scrollable-content pt-6 pr-6 pb-6 pl-6">
+<!-- Plan Info -->
+<div class="flex items-center gap-3 text-sm font-medium opacity-80 mb-4">
+<i class="fas fa-arrow-right text-xs text-emerald-400"></i>
+Comprehensive component library
+</div>
+
+<!-- Price Display -->
+<div class="flex gap-2 mb-6 items-end">
+<div class="price-value gradient-text bg-gradient-to-r from-white/90 to-white/70">v1.0</div>
+<div class="text-lg opacity-70 mb-2">design</div>
+</div>
+
+<!-- Features Grid -->
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Glassmorphic effects
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Gradient typography
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Custom animations
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Responsive layouts
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Interactive states
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Accessible markup
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Icon integration
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Modular system
+</div>
+</div>
+
+<!-- Feature tags -->
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">GLASS UI</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">MODERN</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">TAILWIND</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">PREMIUM</span>
+</div>
+
+<div class="card-divider w-full mb-6"></div>
+
+<!-- System Notice -->
+<div class="bg-white/5 border-white/10 border rounded-2xl mb-6 pt-4 pr-4 pb-4 pl-4 shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)]">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+<i class="fas fa-info text-blue-400 text-xs"></i>
+</div>
+<div class="text-sm">
+<p class="font-medium mb-1">Living Design System</p>
+<p class="opacity-80">This document showcases all design tokens, components, and patterns used in the StreamFlow AI interface.</p>
+</div>
+</div>
+</div>
+
+<!-- Additional Benefits -->
+<div class="mb-6">
+<h3 class="font-medium text-white mb-4">System Features:</h3>
+<div class="space-y-3">
+<div class="flex items-start gap-3 text-sm">
+<i class="fas fa-star text-yellow-400 text-xs mt-1"></i>
+<div>
+<p class="font-medium">Consistent Design Language</p>
+<p class="opacity-70 text-xs">Unified visual system across all components</p>
+</div>
+</div>
+<div class="flex items-start gap-3 text-sm">
+<i class="fas fa-code text-blue-400 text-xs mt-1"></i>
+<div>
+<p class="font-medium">Reusable Patterns</p>
+<p class="opacity-70 text-xs">Modular components for rapid development</p>
+</div>
+</div>
+<div class="flex items-start gap-3 text-sm">
+<i class="fas fa-paint-brush text-green-400 text-xs mt-1"></i>
+<div>
+<p class="font-medium">Modern Aesthetics</p>
+<p class="opacity-70 text-xs">Glass effects and gradient treatments</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Fixed Action Buttons -->
+<div class="p-6 pt-0 border-t border-white/10">
+<div class="flex flex-col sm:flex-row gap-3">
+<button class="flex-1 px-6 py-3 rounded-xl glass-button bg-white/5 border border-white/20 font-medium hover:bg-white/10 transition-all">
+View on GitHub
+</button>
+<button class="flex-1 px-6 py-3 rounded-xl glass-button bg-primary-500/30 border border-primary-500/50 font-medium hover:bg-primary-500/40 transition-all flex items-center justify-center gap-2">
+<i class="fas fa-book text-sm"></i>
+Explore System
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Typography Section -->
+<section id="typography" class="ds-section">
+<h2 class="ds-section-title">Typography</h2>
+<div class="ds-card">
+<div class="ds-spec-row">
+<div class="ds-spec-name">Heading 1</div>
+<div class="ds-spec-preview">
+<h1 class="text-2xl font-semibold font-jakarta tracking-tight">The quick brown fox jumps</h1>
+</div>
+<div class="ds-spec-value">24px / 32px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Heading 2</div>
+<div class="ds-spec-preview">
+<h2 class="text-xl font-semibold font-jakarta">The quick brown fox jumps</h2>
+</div>
+<div class="ds-spec-value">20px / 28px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Heading 3</div>
+<div class="ds-spec-preview">
+<h3 class="font-medium text-white">The quick brown fox jumps</h3>
+</div>
+<div class="ds-spec-value">16px / 24px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Body Large</div>
+<div class="ds-spec-preview">
+<p class="text-lg opacity-70">The quick brown fox jumps over the lazy dog</p>
+</div>
+<div class="ds-spec-value">18px / 28px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Body Medium</div>
+<div class="ds-spec-preview">
+<p class="text-sm">The quick brown fox jumps over the lazy dog</p>
+</div>
+<div class="ds-spec-value">14px / 20px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Body Small</div>
+<div class="ds-spec-preview">
+<p class="text-xs opacity-70">The quick brown fox jumps over the lazy dog</p>
+</div>
+<div class="ds-spec-value">12px / 16px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Feature Label</div>
+<div class="ds-spec-preview">
+<div class="feature-label">The quick brown fox jumps over the lazy dog</div>
+</div>
+<div class="ds-spec-value">12.8px / 16.6px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Price Value</div>
+<div class="ds-spec-preview">
+<div class="price-value gradient-text bg-gradient-to-r from-white/90 to-white/70">$49</div>
+</div>
+<div class="ds-spec-value">40px / 40px</div>
+</div>
+
+<div class="ds-spec-row">
+<div class="ds-spec-name">Tag Tiny</div>
+<div class="ds-spec-preview">
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">BADGE TEXT</span>
+</div>
+<div class="ds-spec-value">10px / 14px</div>
+</div>
+</div>
+</section>
+
+<!-- Colors & Surfaces Section -->
+<section id="colors" class="ds-section">
+<h2 class="ds-section-title">Colors & Surfaces</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div>
+<h3 class="font-medium mb-4">Primary Colors</h3>
+<div class="space-y-3">
+<div>
+<div class="ds-color-swatch" style="background: hsl(260, 95%, 63%);"></div>
+<p class="text-sm font-medium">Primary 500</p>
+<p class="text-xs opacity-60 font-mono">hsl(260, 95%, 63%)</p>
+</div>
+<div>
+<div class="ds-color-swatch" style="background: hsl(250, 95%, 58%);"></div>
+<p class="text-sm font-medium">Primary 600</p>
+<p class="text-xs opacity-60 font-mono">hsl(250, 95%, 58%)</p>
+</div>
+<div>
+<div class="ds-color-swatch" style="background: hsl(270, 95%, 68%);"></div>
+<p class="text-sm font-medium">Primary 700</p>
+<p class="text-xs opacity-60 font-mono">hsl(270, 95%, 68%)</p>
+</div>
+</div>
+</div>
+
+<div>
+<h3 class="font-medium mb-4">Secondary Colors</h3>
+<div class="space-y-3">
+<div>
+<div class="ds-color-swatch" style="background: hsl(280, 90%, 80%);"></div>
+<p class="text-sm font-medium">Secondary 800</p>
+<p class="text-xs opacity-60 font-mono">hsl(280, 90%, 80%)</p>
+</div>
+</div>
+</div>
+
+<div>
+<h3 class="font-medium mb-4">Dark Grays</h3>
+<div class="space-y-3">
+<div>
+<div class="ds-color-swatch" style="background: hsl(225, 20%, 10%);"></div>
+<p class="text-sm font-medium">Dark Gray 50</p>
+<p class="text-xs opacity-60 font-mono">hsl(225, 20%, 10%)</p>
+</div>
+<div>
+<div class="ds-color-swatch" style="background: hsl(225, 15%, 15%);"></div>
+<p class="text-sm font-medium">Dark Gray 100</p>
+<p class="text-xs opacity-60 font-mono">hsl(225, 15%, 15%)</p>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-4 mt-8">Surface Treatments</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="ds-card glass-effect">
+<h4 class="font-medium mb-2">Glass Effect</h4>
+<p class="text-sm opacity-70 mb-3">backdrop-filter: blur(12px)</p>
+<pre class="text-xs opacity-60 bg-black/30 p-3 rounded">from-white/20 to-white/5</pre>
+</div>
+
+<div class="ds-card" style="background: rgba(255,255,255,0.05);">
+<h4 class="font-medium mb-2">Card Surface</h4>
+<p class="text-sm opacity-70 mb-3">Standard container background</p>
+<pre class="text-xs opacity-60 bg-black/30 p-3 rounded">rgba(255,255,255,0.05)</pre>
+</div>
+
+<div class="ds-card" style="background: rgba(255,255,255,0.08);">
+<h4 class="font-medium mb-2">Elevated Surface</h4>
+<p class="text-sm opacity-70 mb-3">Hover/interactive states</p>
+<pre class="text-xs opacity-60 bg-black/30 p-3 rounded">rgba(255,255,255,0.08)</pre>
+</div>
+
+<div class="ds-card" style="background: rgba(139, 92, 246, 0.15);">
+<h4 class="font-medium mb-2">Selected State</h4>
+<p class="text-sm opacity-70 mb-3">Active/selected items</p>
+<pre class="text-xs opacity-60 bg-black/30 p-3 rounded">rgba(139, 92, 246, 0.15)</pre>
+</div>
+</div>
+
+<h3 class="font-medium mb-4 mt-8">Gradients</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="ds-card" style="background: linear-gradient(to right, rgba(255,255,255,0.2), rgba(255,255,255,0.05)); min-height: 120px;">
+<h4 class="font-medium mb-2">Glass Gradient</h4>
+<p class="text-xs opacity-60">from-white/20 to-white/5</p>
+</div>
+
+<div class="ds-card" style="background: linear-gradient(to bottom right, hsl(225, 15%, 15%), hsl(225, 20%, 10%), rgb(15, 23, 42)); min-height: 120px;">
+<h4 class="font-medium mb-2">Background Gradient</h4>
+<p class="text-xs opacity-60">from-darkGray-100 via-darkGray-50 to-slate-900</p>
+</div>
+
+<div class="ds-card" style="min-height: 120px;">
+<h4 class="font-medium mb-2">Text Gradient</h4>
+<div class="price-value gradient-text bg-gradient-to-r from-white/90 to-white/70">$49</div>
+<p class="text-xs opacity-60 mt-2">from-white/90 to-white/70</p>
+</div>
+
+<div class="p-6" style="min-height: 120px;">
+<h4 class="font-medium mb-2">Divider Gradient</h4>
+<div class="card-divider w-full my-4"></div>
+<p class="text-xs opacity-60">Complex multi-stop gradient</p>
+</div>
+</div>
+</section>
+
+<!-- UI Components Section -->
+<section id="components" class="ds-section">
+<h2 class="ds-section-title">UI Components</h2>
+
+<h3 class="font-medium mb-6 text-xl">Buttons</h3>
+<div class="ds-card">
+<div class="flex flex-wrap gap-8 items-start">
+<div class="ds-component-state">
+<button class="px-6 py-3 rounded-xl glass-button bg-primary-500/30 border border-primary-500/50 font-medium transition-all flex items-center justify-center gap-2">
+<i class="fas fa-rocket text-sm"></i>
+Primary Button
+</button>
+<div class="ds-state-label">Default</div>
+</div>
+
+<div class="ds-component-state">
+<button class="px-6 py-3 rounded-xl glass-button bg-primary-500/40 border border-primary-500/50 font-medium transition-all flex items-center justify-center gap-2" style="transform: translateY(-1px);">
+<i class="fas fa-rocket text-sm"></i>
+Primary Button
+</button>
+<div class="ds-state-label">Hover</div>
+</div>
+
+<div class="ds-component-state">
+<button class="px-6 py-3 rounded-xl glass-button bg-white/5 border border-white/20 font-medium transition-all">
+Secondary Button
+</button>
+<div class="ds-state-label">Default</div>
+</div>
+
+<div class="ds-component-state">
+<button class="px-6 py-3 rounded-xl glass-button bg-white/10 border border-white/20 font-medium transition-all" style="transform: translateY(-1px);">
+Secondary Button
+</button>
+<div class="ds-state-label">Hover</div>
+</div>
+
+<div class="ds-component-state">
+<button class="px-6 py-3 rounded-xl glass-button bg-white/5 border border-white/20 font-medium transition-all opacity-40" disabled>
+Disabled Button
+</button>
+<div class="ds-state-label">Disabled</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Icon Buttons</h3>
+<div class="ds-card">
+<div class="flex flex-wrap gap-8 items-start">
+<div class="ds-component-state">
+<button class="w-8 h-8 rounded-full flex items-center justify-center transition-colors">
+<i class="fas fa-times text-sm opacity-60"></i>
+</button>
+<div class="ds-state-label">Default</div>
+</div>
+
+<div class="ds-component-state">
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 transition-colors">
+<i class="fas fa-times text-sm opacity-100"></i>
+</button>
+<div class="ds-state-label">Hover</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Icon Circles</h3>
+<div class="ds-card">
+<div class="flex flex-wrap gap-8 items-center">
+<div class="ds-component-state">
+<div class="icon-circle shadow-lg">
+<i class="fas fa-bolt text-lg text-primary-300"></i>
+</div>
+<div class="ds-state-label">Icon Circle</div>
+</div>
+
+<div class="ds-component-state">
+<div class="icon-circle shadow-lg">
+<i class="fas fa-palette text-lg text-primary-300"></i>
+</div>
+<div class="ds-state-label">With Icon</div>
+</div>
+
+<div class="ds-component-state">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+<i class="fas fa-info text-blue-400 text-xs"></i>
+</div>
+<div class="ds-state-label">Colored</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Cards & Containers</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-white/5 border-white/10 border rounded-2xl p-6 shadow-lg">
+<h4 class="font-medium mb-2">Info Card</h4>
+<p class="text-sm opacity-80">Standard information container with subtle background and border.</p>
+</div>
+
+<div class="payment-method rounded-xl p-4">
+<h4 class="font-medium mb-2">Payment Method Card</h4>
+<p class="text-sm opacity-80">Interactive card with hover states.</p>
+</div>
+
+<div class="payment-method selected rounded-xl p-4">
+<h4 class="font-medium mb-2">Selected Card</h4>
+<p class="text-sm opacity-80">Active/selected state variant.</p>
+</div>
+
+<div class="modal-card glass-effect bg-gradient-to-r from-white/20 to-white/5 backdrop-blur-3xl p-6 relative">
+<div class="absolute inset-0 rounded-[1.5em] border border-white/50 [mask-image:linear-gradient(135deg,white,transparent_50%)]"></div>
+<div class="absolute inset-0 rounded-[1.5em] border border-primary-500/50 [mask-image:linear-gradient(135deg,transparent_50%,white)]"></div>
+<div class="relative">
+<h4 class="font-medium mb-2">Glass Modal</h4>
+<p class="text-sm opacity-80">Primary modal container with glass effect and gradient borders.</p>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Form Elements</h3>
+<div class="ds-card">
+<div class="space-y-6">
+<div>
+<p class="text-sm mb-3 opacity-70">Radio Buttons</p>
+<div class="flex gap-6">
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="demo" class="text-primary-500" />
+<span class="text-sm">Option 1</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="demo" class="text-primary-500" checked />
+<span class="text-sm">Option 2</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Tags & Badges</h3>
+<div class="ds-card">
+<div class="flex flex-wrap gap-3">
+<span class="text-[10px] px-2 py-1 rounded-full bg-white/10 border border-white/20">DEFAULT TAG</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SUCCESS TAG</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">INFO TAG</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">WARNING TAG</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30">ERROR TAG</span>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Lists & Features</h3>
+<div class="ds-card">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Feature list item with checkmark
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Another feature example
+</div>
+<div class="flex items-center gap-3 text-sm font-medium opacity-80">
+<i class="fas fa-arrow-right text-xs text-emerald-400"></i>
+Status indicator with icon
+</div>
+<div class="flex items-start gap-3 text-sm">
+<i class="fas fa-star text-yellow-400 text-xs mt-1"></i>
+<div>
+<p class="font-medium">Feature Title</p>
+<p class="opacity-70 text-xs">Supporting description text</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Layout & Spacing Section -->
+<section id="layout" class="ds-section">
+<h2 class="ds-section-title">Layout & Spacing</h2>
+
+<h3 class="font-medium mb-6 text-xl">Modal Layout Pattern</h3>
+<div class="ds-card">
+<p class="text-sm opacity-70 mb-4">Primary modal structure: 32em width, 1.5em border radius, layered with shadow card</p>
+<div class="bg-white/5 p-4 rounded-lg">
+<pre class="text-xs opacity-80 font-mono">
+.modal-card {
+  width: 32em;
+  max-width: 90vw;
+  min-height: 32em;
+  border-radius: 1.5em;
+}</pre>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Grid Layouts</h3>
+<div class="ds-card">
+<p class="text-sm opacity-70 mb-4">2-column feature grid</p>
+<div class="grid grid-cols-2 gap-4 p-6 bg-white/5 rounded-lg">
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Grid item 1
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Grid item 2
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Grid item 3
+</div>
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Grid item 4
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Spacing System</h3>
+<div class="ds-card">
+<div class="space-y-6">
+<div>
+<p class="text-sm mb-2">Header Padding: pt-6 pr-6 pb-0 pl-6</p>
+<div class="bg-white/5 h-16 rounded-lg" style="padding: 1.5rem 1.5rem 0 1.5rem;">
+<div class="bg-primary-500/30 h-full rounded flex items-center justify-center text-xs">
+Header Area
+</div>
+</div>
+</div>
+
+<div>
+<p class="text-sm mb-2">Content Padding: pt-6 pr-6 pb-6 pl-6</p>
+<div class="bg-white/5 h-16 rounded-lg" style="padding: 1.5rem;">
+<div class="bg-primary-500/30 h-full rounded flex items-center justify-center text-xs">
+Content Area
+</div>
+</div>
+</div>
+
+<div>
+<p class="text-sm mb-2">Component Gap: gap-3 (0.75rem), gap-4 (1rem)</p>
+<div class="flex gap-3">
+<div class="flex-1 bg-white/5 h-16 rounded-lg flex items-center justify-center text-xs">gap-3</div>
+<div class="flex-1 bg-white/5 h-16 rounded-lg flex items-center justify-center text-xs">gap-3</div>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Scrollable Container</h3>
+<div class="ds-card">
+<div class="scrollable-content overflow-y-auto bg-white/5 rounded-lg p-4" style="max-height: 200px;">
+<p class="mb-4">Custom scrollbar styling applied:</p>
+<p class="mb-4 opacity-70">scrollbar-width: thin</p>
+<p class="mb-4 opacity-70">scrollbar-color: rgba(139, 92, 246, 0.5)</p>
+<p class="mb-4 opacity-70">webkit-scrollbar custom styling</p>
+<p class="mb-4 opacity-70">Scroll down to see the custom scrollbar...</p>
+<p class="mb-4 opacity-70">More content here...</p>
+<p class="mb-4 opacity-70">Keep scrolling...</p>
+<p class="mb-4 opacity-70">Almost there...</p>
+<p class="opacity-70">End of scrollable content.</p>
+</div>
+</div>
+</section>
+
+<!-- Motion & Interaction Section -->
+<section id="motion" class="ds-section">
+<h2 class="ds-section-title">Motion & Interaction</h2>
+
+<h3 class="font-medium mb-6 text-xl">Transitions</h3>
+<div class="ds-card">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<p class="text-sm mb-3">Button Hover (0.3s ease)</p>
+<button class="px-6 py-3 rounded-xl glass-button bg-primary-500/30 border border-primary-500/50 font-medium">
+Hover Me
+</button>
+</div>
+
+<div>
+<p class="text-sm mb-3">Opacity Transition</p>
+<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors">
+<i class="fas fa-times text-sm opacity-60 hover:opacity-100 transition-opacity"></i>
+</button>
+</div>
+
+<div>
+<p class="text-sm mb-3">Background Transition</p>
+<div class="payment-method rounded-xl p-4 cursor-pointer">
+<p class="text-sm">Hover this card</p>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Transform Effects</h3>
+<div class="ds-card">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<p class="text-sm mb-3">translateY(-1px) on hover</p>
+<button class="px-6 py-3 rounded-xl glass-button bg-primary-500/30 border border-primary-500/50 font-medium">
+Lift on Hover
+</button>
+</div>
+
+<div>
+<p class="text-sm mb-3">Base card transform (translate-x-20 translate-y-28)</p>
+<div class="relative h-32">
+<div class="w-32 h-20 bg-primary-500/30 rounded-lg absolute" style="transform: translate(5rem, 7rem) scale(0.7);"></div>
+<div class="w-32 h-20 bg-primary-700/50 rounded-lg border border-white/20"></div>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Effects Gallery</h3>
+<div class="ds-card">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<p class="text-sm mb-3">Glass Effect</p>
+<div class="glass-effect bg-white/10 rounded-xl p-6 border border-white/20">
+<p class="text-xs">backdrop-filter: blur(12px)</p>
+</div>
+</div>
+
+<div>
+<p class="text-sm mb-3">Glow Shadow</p>
+<div class="glow bg-primary-500/20 rounded-xl p-6 border border-primary-500/30">
+<p class="text-xs">Purple glow effect</p>
+</div>
+</div>
+
+<div>
+<p class="text-sm mb-3">Gradient Mask Borders</p>
+<div class="relative bg-white/5 rounded-xl p-6">
+<div class="absolute inset-0 rounded-xl border border-white/50 [mask-image:linear-gradient(135deg,white,transparent_50%)]"></div>
+<div class="absolute inset-0 rounded-xl border border-primary-500/50 [mask-image:linear-gradient(135deg,transparent_50%,white)]"></div>
+<p class="text-xs relative">Dual gradient borders</p>
+</div>
+</div>
+</div>
+</div>
+
+<h3 class="font-medium mb-6 text-xl mt-12">Interactive States</h3>
+<div class="ds-card">
+<p class="text-sm opacity-70 mb-4">Payment method card state transitions</p>
+<div class="space-y-3">
+<div class="payment-method rounded-xl p-4">
+<p class="text-sm">Default State</p>
+</div>
+<div class="payment-method rounded-xl p-4" style="background: rgba(255,255,255,0.12); border-color: rgba(139, 92, 246, 0.4);">
+<p class="text-sm">Hover State</p>
+</div>
+<div class="payment-method selected rounded-xl p-4">
+<p class="text-sm">Selected State</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Icons Section -->
+<section id="icons" class="ds-section">
+<h2 class="ds-section-title">Icons</h2>
+
+<div class="ds-card">
+<p class="text-sm opacity-70 mb-6">Font Awesome icons integrated throughout the interface</p>
+
+<h3 class="font-medium mb-4">Interface Icons</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-8">
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-bolt text-2xl text-primary-300"></i>
+<span class="text-xs opacity-60">fa-bolt</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-palette text-2xl text-primary-300"></i>
+<span class="text-xs opacity-60">fa-palette</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-times text-2xl"></i>
+<span class="text-xs opacity-60">fa-times</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-rocket text-2xl"></i>
+<span class="text-xs opacity-60">fa-rocket</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-arrow-right text-2xl text-emerald-400"></i>
+<span class="text-xs opacity-60">fa-arrow-right</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-check text-2xl text-emerald-400"></i>
+<span class="text-xs opacity-60">fa-check</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-info text-2xl text-blue-400"></i>
+<span class="text-xs opacity-60">fa-info</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-credit-card text-2xl"></i>
+<span class="text-xs opacity-60">fa-credit-card</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-star text-2xl text-yellow-400"></i>
+<span class="text-xs opacity-60">fa-star</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-users text-2xl text-blue-400"></i>
+<span class="text-xs opacity-60">fa-users</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-chart-line text-2xl text-green-400"></i>
+<span class="text-xs opacity-60">fa-chart-line</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-code text-2xl text-blue-400"></i>
+<span class="text-xs opacity-60">fa-code</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-paint-brush text-2xl text-green-400"></i>
+<span class="text-xs opacity-60">fa-paint-brush</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-book text-2xl"></i>
+<span class="text-xs opacity-60">fa-book</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-spinner text-2xl"></i>
+<span class="text-xs opacity-60">fa-spinner</span>
+</div>
+</div>
+
+<h3 class="font-medium mb-4">Icon Sizes</h3>
+<div class="flex items-end gap-8 mb-8">
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-heart text-xs"></i>
+<span class="text-xs opacity-60">text-xs</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-heart text-sm"></i>
+<span class="text-xs opacity-60">text-sm</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-heart text-lg"></i>
+<span class="text-xs opacity-60">text-lg</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-heart text-xl"></i>
+<span class="text-xs opacity-60">text-xl</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<i class="fas fa-heart text-2xl"></i>
+<span class="text-xs opacity-60">text-2xl</span>
+</div>
+</div>
+
+<h3 class="font-medium mb-4">Icon in Context</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="icon-circle shadow-lg">
+<i class="fas fa-bolt text-lg text-primary-300"></i>
+</div>
+
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+<i class="fas fa-info text-blue-400 text-xs"></i>
+</div>
+<span class="text-sm">Icon with colored background</span>
+</div>
+
+<div class="feature-label flex items-center gap-2">
+<i class="fas fa-check text-emerald-400 text-xs"></i>
+Inline icon with text
+</div>
+
+<button class="px-6 py-3 rounded-xl glass-button bg-primary-500/30 border border-primary-500/50 font-medium flex items-center justify-center gap-2">
+<i class="fas fa-rocket text-sm"></i>
+Button with icon
+</button>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="text-center py-12 opacity-50">
+<p class="text-sm">StreamFlow AI Design System v1.0</p>
+<p class="text-xs mt-2">Built with Tailwind CSS, Font Awesome, and glassmorphic design principles</p>
+</footer>
+
+<script>
+// Smooth scroll for navigation
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+target.scrollIntoView({ behavior: 'smooth' });
+}
+});
+});
+
+// Add active state to nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.ds-nav a[href^="#"]');
+
+window.addEventListener('scroll', () => {
+let current = '';
+sections.forEach(section => {
+const sectionTop = section.offsetTop;
+const sectionHeight = section.clientHeight;
+if (scrollY >= (sectionTop - 100)) {
+current = section.getAttribute('id');
+}
+});
+
+navLinks.forEach(link => {
+link.classList.remove('opacity-100');
+link.classList.add('opacity-70');
+if (link.getAttribute('href') === `#${current}`) {
+link.classList.remove('opacity-70');
+link.classList.add('opacity-100');
+}
+});
+});
+</script>
+
+</body></html>

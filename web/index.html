@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Importador LingQ</title>
+    <link rel="stylesheet" href="/web/styles.css">
+  </head>
+  <body data-theme="dark">
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <span class="kicker">Painel de importacao</span>
+          <h1>Importador LingQ</h1>
+          <p>Organize canais do YouTube, filtre por idioma, defina limites por canal e acompanhe cada execucao em um painel unico.</p>
+        </div>
+        <div class="topbarActions">
+          <button id="openSession" type="button">
+            Sessao LingQ
+            <span id="sessionBadge" class="badge">Nao configurada</span>
+          </button>
+          <button id="themeToggle" class="themeToggle" type="button" aria-label="Alternar para modo claro" aria-pressed="false">
+            <span class="themeToggleIcon" aria-hidden="true"></span>
+            <span id="themeToggleText">Modo claro</span>
+          </button>
+          <button id="runImport" class="primary">Rodar importacao</button>
+        </div>
+      </header>
+
+      <section class="panel channelsPanel">
+        <div class="panelHeader">
+          <h2>Canais</h2>
+          <button id="addChannel">Adicionar canal</button>
+        </div>
+        <div class="tableToolbar" aria-label="Filtro de idioma">
+          <div class="segmented" id="languageFilter" role="group" aria-label="Filtrar canais por idioma">
+            <button type="button" class="segment active" data-lang="all" aria-pressed="true">Todos</button>
+            <button type="button" class="segment flagSegment flagGb" data-lang="en" aria-pressed="false" title="Ingles"></button>
+            <button type="button" class="segment flagSegment flagEs" data-lang="es" aria-pressed="false" title="Espanhol"></button>
+            <button type="button" class="segment flagSegment flagIt" data-lang="it" aria-pressed="false" title="Italiano"></button>
+            <button type="button" class="segment flagSegment flagFr" data-lang="fr" aria-pressed="false" title="Frances"></button>
+          </div>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ativo</th>
+                <th>Nome</th>
+                <th>Idioma</th>
+                <th>Codigo</th>
+                <th>Videos</th>
+                <th>URL</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="channelsBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid secondaryGrid">
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Status</h2>
+            <span id="jobBadge" class="badge">Parado</span>
+          </div>
+          <dl class="statusList">
+            <div><dt>Inicio</dt><dd id="startedAt">-</dd></div>
+            <div><dt>Fim</dt><dd id="finishedAt">-</dd></div>
+            <div><dt>Resumo</dt><dd id="summary">Sem execucao ativa.</dd></div>
+          </dl>
+          <pre id="logs" class="logs"></pre>
+        </div>
+
+        <div class="panel">
+          <div class="panelHeader">
+            <h2>Historico</h2>
+            <span id="historyTotal" class="muted"></span>
+          </div>
+          <div id="historyList" class="history"></div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="channelDialog">
+      <form method="dialog" id="channelForm">
+        <h2 id="dialogTitle">Canal</h2>
+        <input type="hidden" id="channelId">
+        <label>Nome<input id="channelName" required></label>
+        <label>Idioma<input id="channelLanguage" required placeholder="ingles"></label>
+        <label>Codigo LingQ<input id="channelLangCode" required placeholder="en"></label>
+        <label>URL do canal<input id="channelUrl" required placeholder="https://www.youtube.com/@canal"></label>
+        <label>Videos por execucao<input id="channelLimit" type="number" min="1" value="1" required></label>
+        <label class="check"><input id="channelActive" type="checkbox" checked> Ativo</label>
+        <menu>
+          <button value="cancel">Cancelar</button>
+          <button id="saveChannel" value="default" class="primary">Salvar</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <dialog id="sessionDialog">
+      <form method="dialog" id="sessionForm" class="sessionForm">
+        <div class="panelHeader">
+          <h2>Sessao LingQ</h2>
+          <button id="closeSession" type="button" aria-label="Fechar">Fechar</button>
+        </div>
+        <label>Cookie de sessao LingQ<input id="sessionId" type="password" autocomplete="off" placeholder="wwwlingqcomsa"></label>
+        <label>csrftoken<input id="csrfToken" type="password" autocomplete="off"></label>
+        <menu>
+          <button id="clearSession" type="button">Limpar</button>
+          <button class="primary" value="default">Salvar sessao</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script src="/web/app.js"></script>
+  </body>
+</html>

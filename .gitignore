@@ -1,0 +1,10 @@
+youtube_cookies.txt
+*.cookies.txt
+.env
+config.json
+history.json
+edge_profile/
+logs/
+subs_tmp/
+youtube_cookies.txt
+.env
