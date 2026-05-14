@@ -1,6 +1,7 @@
 const state = {
   channels: [],
   channelLanguageFilter: "all",
+  activeTab: "channels",
   statusTimer: null,
   wasRunning: false,
 };
@@ -129,6 +130,10 @@ function openDialog(channel = null) {
   $("#channelDialog").showModal();
 }
 
+function closeChannelDialog() {
+  $("#channelDialog").close();
+}
+
 async function saveChannel(event) {
   event.preventDefault();
   const payload = {
@@ -160,6 +165,7 @@ async function runImport() {
   $("#runImport").disabled = true;
   try {
     await api("/api/import/run", { method: "POST" });
+    setActiveTab("status");
     await loadStatus();
   } catch (error) {
     alert(error.message);
@@ -174,7 +180,7 @@ async function loadStatus() {
   $("#jobBadge").className = status.running ? "badge active" : "badge";
   $("#startedAt").textContent = status.started_at || "-";
   $("#finishedAt").textContent = status.finished_at || "-";
-  $("#summary").textContent = status.summary || "Sem execucao ativa.";
+  $("#summary").textContent = status.summary || "Sem execução ativa.";
   $("#logs").textContent = (status.logs || []).join("\n");
   $("#runImport").disabled = status.running;
 
@@ -186,7 +192,7 @@ async function loadStatus() {
 
 async function loadHistory() {
   const history = await api("/api/history");
-  $("#historyTotal").textContent = `${history.total} videos`;
+  $("#historyTotal").textContent = `${history.total} vídeos`;
   const list = $("#historyList");
   list.innerHTML = "";
 
@@ -205,7 +211,7 @@ async function loadHistory() {
 async function loadSessionStatus() {
   const session = await api("/api/lingq-session");
   const configured = session.has_sessionid && session.has_csrftoken;
-  $("#sessionBadge").textContent = configured ? "Configurada" : "Nao configurada";
+  $("#sessionBadge").textContent = configured ? "Configurada" : "Não configurada";
   $("#sessionBadge").className = configured ? "badge active" : "badge";
 }
 
@@ -242,6 +248,22 @@ function closeSessionDialog() {
   $("#sessionDialog").close();
 }
 
+function setActiveTab(tabName) {
+  state.activeTab = tabName;
+
+  document.querySelectorAll("[data-tab]").forEach((button) => {
+    const active = button.dataset.tab === tabName;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+
+  document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
+    const active = panel.dataset.tabPanel === tabName;
+    panel.classList.toggle("active", active);
+    panel.hidden = !active;
+  });
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -274,16 +296,21 @@ setTheme(localStorage.getItem(THEME_STORAGE_KEY) || document.body.dataset.theme)
 
 $("#addChannel").addEventListener("click", () => openDialog());
 $("#channelForm").addEventListener("submit", saveChannel);
+$("#cancelChannel").addEventListener("click", closeChannelDialog);
 $("#runImport").addEventListener("click", runImport);
 $("#openSession").addEventListener("click", openSessionDialog);
 $("#closeSession").addEventListener("click", closeSessionDialog);
 $("#themeToggle").addEventListener("click", toggleTheme);
 $("#sessionForm").addEventListener("submit", saveSession);
 $("#clearSession").addEventListener("click", clearSession);
+document.querySelectorAll("[data-tab]").forEach((button) => {
+  button.addEventListener("click", () => setActiveTab(button.dataset.tab));
+});
 document.querySelectorAll("#languageFilter [data-lang]").forEach((button) => {
   button.addEventListener("click", () => setLanguageFilter(button.dataset.lang));
 });
 
+setActiveTab(state.activeTab);
 loadChannels();
 loadStatus();
 loadHistory();

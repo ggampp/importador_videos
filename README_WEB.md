@@ -1,6 +1,6 @@
 # Interface web local
 
-Esta primeira versao transforma o importador em uma aplicacao web local.
+Esta primeira versão transforma o importador em uma aplicação web local.
 
 ## Como iniciar
 
@@ -19,21 +19,21 @@ http://127.0.0.1:8000
 No Windows, a interface roda sem `--reload` porque o Playwright precisa abrir
 um processo auxiliar para ler os cookies do perfil Edge.
 
-## O que ja da para fazer
+## O que já dá para fazer
 
 - Listar os canais configurados.
 - Adicionar, editar e remover canais.
-- Ativar ou desativar canais sem apagar a configuracao.
-- Definir quantos videos cada canal deve recuperar por execucao.
-- Rodar a importacao manualmente pela tela.
-- Acompanhar logs e status da execucao.
-- Ver os ultimos itens do historico.
+- Ativar ou desativar canais sem apagar a configuração.
+- Definir quantos vídeos cada canal deve recuperar por execução.
+- Rodar a importação manualmente pela tela.
+- Acompanhar logs e status da execução.
+- Ver os últimos itens do histórico.
 - Salvar `wwwlingqcomsa` e `csrftoken` do LingQ para importar direto pela API,
-  sem abrir o Edge durante a execucao.
+  sem abrir o Edge durante a execução.
 
-## Como os dados sao salvos
+## Como os dados são salvos
 
-A aplicacao continua usando `config.json` e `history.json`.
+A aplicação continua usando `config.json` e `history.json`.
 
 Cada canal agora possui estes campos extras:
 

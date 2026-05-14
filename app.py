@@ -92,7 +92,7 @@ def find_channel(config: dict[str, Any], channel_id: str) -> tuple[int, dict[str
     for index, channel in enumerate(config["canais"]):
         if channel.get("id") == channel_id:
             return index, channel
-    raise HTTPException(status_code=404, detail="Canal nao encontrado")
+    raise HTTPException(status_code=404, detail="Canal não encontrado")
 
 
 def run_import_job() -> None:
@@ -106,23 +106,23 @@ def run_import_job() -> None:
             "started_at": datetime.now().isoformat(timespec="seconds"),
             "finished_at": None,
             "exit_code": None,
-            "summary": "Importacao em andamento",
+            "summary": "Importação em andamento",
             "logs": [],
         })
 
     exit_code = 0
-    summary = "Importacao concluida"
+    summary = "Importação concluída"
     try:
         config = import_videos.load_config()
         history = import_videos.load_history()
         import_videos.log.info("=" * 60)
-        import_videos.log.info("Inicio pela aplicacao web: %s", datetime.now().isoformat(timespec="seconds"))
+        import_videos.log.info("Início pela aplicação web: %s", datetime.now().isoformat(timespec="seconds"))
         import_videos.run_import(config, history)
         import_videos.log.info("Fim: %s", datetime.now().isoformat(timespec="seconds"))
     except Exception as exc:
         exit_code = 1
         summary = f"Erro: {exc}"
-        import_videos.log.exception("Erro inesperado na execucao web:")
+        import_videos.log.exception("Erro inesperado na execução web:")
     finally:
         import_videos.log.removeHandler(handler)
         with job_lock:
@@ -169,7 +169,7 @@ def put_lingq_session(payload: dict[str, Any]) -> dict[str, bool]:
     csrftoken = str(payload.get("csrftoken") or "").strip()
     if session_cookie or csrftoken:
         if not session_cookie or not csrftoken:
-            raise HTTPException(status_code=400, detail="Informe o cookie de sessao e o csrftoken.")
+            raise HTTPException(status_code=400, detail="Informe o cookie de sessão e o csrftoken.")
         config["lingq_cookies"] = {
             "wwwlingqcomsa": session_cookie,
             "csrftoken": csrftoken,
@@ -222,9 +222,9 @@ def delete_channel(channel_id: str) -> dict[str, str]:
 def run_import(background_tasks: BackgroundTasks) -> dict[str, str]:
     with job_lock:
         if job_state["running"]:
-            raise HTTPException(status_code=409, detail="Ja existe uma importacao em andamento")
+            raise HTTPException(status_code=409, detail="Já existe uma importação em andamento")
         job_state["running"] = True
-        job_state["summary"] = "Importacao na fila"
+        job_state["summary"] = "Importação na fila"
     background_tasks.add_task(run_import_job)
     return {"status": "started"}
 

@@ -10,35 +10,41 @@
     <main class="shell">
       <header class="topbar">
         <div>
-          <span class="kicker">Painel de importacao</span>
+          <span class="kicker">Painel de importação</span>
           <h1>Importador LingQ</h1>
-          <p>Organize canais do YouTube, filtre por idioma, defina limites por canal e acompanhe cada execucao em um painel unico.</p>
+          <p>Organize canais do YouTube, filtre por idioma, defina limites por canal e acompanhe cada execução em um painel único.</p>
         </div>
         <div class="topbarActions">
           <button id="openSession" type="button">
-            Sessao LingQ
-            <span id="sessionBadge" class="badge">Nao configurada</span>
+            Sessão LingQ
+            <span id="sessionBadge" class="badge">Não configurada</span>
           </button>
           <button id="themeToggle" class="themeToggle" type="button" aria-label="Alternar para modo claro" aria-pressed="false">
             <span class="themeToggleIcon" aria-hidden="true"></span>
             <span id="themeToggleText">Modo claro</span>
           </button>
-          <button id="runImport" class="primary">Rodar importacao</button>
+          <button id="runImport" class="primary">Rodar importação</button>
         </div>
       </header>
 
-      <section class="panel channelsPanel">
+      <nav class="tabs" aria-label="Seções da aplicação">
+        <button class="tabButton active" type="button" data-tab="channels" aria-controls="channelsPanel" aria-selected="true">Canais</button>
+        <button class="tabButton" type="button" data-tab="status" aria-controls="statusPanel" aria-selected="false">Status da importação</button>
+        <button class="tabButton" type="button" data-tab="history" aria-controls="historyPanel" aria-selected="false">Histórico</button>
+      </nav>
+
+      <section id="channelsPanel" class="panel tabPanel active" data-tab-panel="channels">
         <div class="panelHeader">
-          <h2>Canais</h2>
+          <h2>Seleção de canais</h2>
           <button id="addChannel">Adicionar canal</button>
         </div>
         <div class="tableToolbar" aria-label="Filtro de idioma">
           <div class="segmented" id="languageFilter" role="group" aria-label="Filtrar canais por idioma">
             <button type="button" class="segment active" data-lang="all" aria-pressed="true">Todos</button>
-            <button type="button" class="segment flagSegment flagGb" data-lang="en" aria-pressed="false" title="Ingles"></button>
+            <button type="button" class="segment flagSegment flagGb" data-lang="en" aria-pressed="false" title="Inglês"></button>
             <button type="button" class="segment flagSegment flagEs" data-lang="es" aria-pressed="false" title="Espanhol"></button>
             <button type="button" class="segment flagSegment flagIt" data-lang="it" aria-pressed="false" title="Italiano"></button>
-            <button type="button" class="segment flagSegment flagFr" data-lang="fr" aria-pressed="false" title="Frances"></button>
+            <button type="button" class="segment flagSegment flagFr" data-lang="fr" aria-pressed="false" title="Francês"></button>
           </div>
         </div>
         <div class="tableWrap">
@@ -48,8 +54,8 @@
                 <th>Ativo</th>
                 <th>Nome</th>
                 <th>Idioma</th>
-                <th>Codigo</th>
-                <th>Videos</th>
+                <th>Código</th>
+                <th>Vídeos</th>
                 <th>URL</th>
                 <th></th>
               </tr>
@@ -59,27 +65,25 @@
         </div>
       </section>
 
-      <section class="grid secondaryGrid">
-        <div class="panel">
-          <div class="panelHeader">
-            <h2>Status</h2>
-            <span id="jobBadge" class="badge">Parado</span>
-          </div>
-          <dl class="statusList">
-            <div><dt>Inicio</dt><dd id="startedAt">-</dd></div>
-            <div><dt>Fim</dt><dd id="finishedAt">-</dd></div>
-            <div><dt>Resumo</dt><dd id="summary">Sem execucao ativa.</dd></div>
-          </dl>
-          <pre id="logs" class="logs"></pre>
+      <section id="statusPanel" class="panel tabPanel" data-tab-panel="status" hidden>
+        <div class="panelHeader">
+          <h2>Status de execução da importação</h2>
+          <span id="jobBadge" class="badge">Parado</span>
         </div>
+        <dl class="statusList">
+          <div><dt>Início</dt><dd id="startedAt">-</dd></div>
+          <div><dt>Fim</dt><dd id="finishedAt">-</dd></div>
+          <div><dt>Resumo</dt><dd id="summary">Sem execução ativa.</dd></div>
+        </dl>
+        <pre id="logs" class="logs"></pre>
+      </section>
 
-        <div class="panel">
-          <div class="panelHeader">
-            <h2>Historico</h2>
-            <span id="historyTotal" class="muted"></span>
-          </div>
-          <div id="historyList" class="history"></div>
+      <section id="historyPanel" class="panel tabPanel" data-tab-panel="history" hidden>
+        <div class="panelHeader">
+          <h2>Histórico</h2>
+          <span id="historyTotal" class="muted"></span>
         </div>
+        <div id="historyList" class="history"></div>
       </section>
     </main>
 
@@ -88,14 +92,14 @@
         <h2 id="dialogTitle">Canal</h2>
         <input type="hidden" id="channelId">
         <label>Nome<input id="channelName" required></label>
-        <label>Idioma<input id="channelLanguage" required placeholder="ingles"></label>
-        <label>Codigo LingQ<input id="channelLangCode" required placeholder="en"></label>
+        <label>Idioma<input id="channelLanguage" required placeholder="inglês"></label>
+        <label>Código LingQ<input id="channelLangCode" required placeholder="en"></label>
         <label>URL do canal<input id="channelUrl" required placeholder="https://www.youtube.com/@canal"></label>
-        <label>Videos por execucao<input id="channelLimit" type="number" min="1" value="1" required></label>
+        <label>Vídeos por execução<input id="channelLimit" type="number" min="1" value="1" required></label>
         <label class="check"><input id="channelActive" type="checkbox" checked> Ativo</label>
         <menu>
-          <button value="cancel">Cancelar</button>
-          <button id="saveChannel" value="default" class="primary">Salvar</button>
+          <button id="cancelChannel" type="button">Cancelar</button>
+          <button id="saveChannel" type="submit" value="default" class="primary">Salvar</button>
         </menu>
       </form>
     </dialog>
@@ -103,14 +107,14 @@
     <dialog id="sessionDialog">
       <form method="dialog" id="sessionForm" class="sessionForm">
         <div class="panelHeader">
-          <h2>Sessao LingQ</h2>
+          <h2>Sessão LingQ</h2>
           <button id="closeSession" type="button" aria-label="Fechar">Fechar</button>
         </div>
-        <label>Cookie de sessao LingQ<input id="sessionId" type="password" autocomplete="off" placeholder="wwwlingqcomsa"></label>
+        <label>Cookie de sessão LingQ<input id="sessionId" type="password" autocomplete="off" placeholder="wwwlingqcomsa"></label>
         <label>csrftoken<input id="csrfToken" type="password" autocomplete="off"></label>
         <menu>
           <button id="clearSession" type="button">Limpar</button>
-          <button class="primary" value="default">Salvar sessao</button>
+          <button class="primary" value="default">Salvar sessão</button>
         </menu>
       </form>
     </dialog>
