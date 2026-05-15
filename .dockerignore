@@ -1,0 +1,11 @@
+.git
+__pycache__
+*.pyc
+.venv
+venv
+edge_profile
+logs
+subs_tmp
+history.json
+config.json
+youtube_cookies.txt

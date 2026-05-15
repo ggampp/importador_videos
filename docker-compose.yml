@@ -1,0 +1,14 @@
+services:
+  importador-videos:
+    build: .
+    container_name: importador-videos
+    ports:
+      - "8000:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    volumes:
+      - ./config.json:/app/config.json
+      - ./history.json:/app/history.json
+      - ./logs:/app/logs
+      - ./subs_tmp:/app/subs_tmp
+    restart: unless-stopped
