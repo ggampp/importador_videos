@@ -24,6 +24,10 @@
   "_transcricao_modelo": "Modelo da API OpenAI para transcricao. Configure OPENAI_API_KEY no ambiente da VPS ou openai_api_key neste config.",
   "transcricao_max_audio_mb": 24,
   "_transcricao_max_audio_mb": "Limite de tamanho do audio enviado para transcricao.",
+  "duracao_min_segundos": 300,
+  "_duracao_min_segundos": "Duracao MINIMA (segundos) do video para ser importado. Default 300 = 5:00. Pode ser sobrescrito por canal via duracao_min_segundos.",
+  "duracao_max_segundos": 1200,
+  "_duracao_max_segundos": "Duracao MAXIMA (segundos) do video para ser importado. Default 1200 = 20:00. Pode ser sobrescrito por canal via duracao_max_segundos.",
   "canais": [
     {
       "idioma": "espanhol",

@@ -196,19 +196,40 @@ def get_configured_lingq_cookies(config: dict[str, Any]) -> dict[str, str]:
 # ----------------------------------------------------------------------------
 # YouTube — buscar últimos vídeos via yt-dlp
 # ----------------------------------------------------------------------------
-def fetch_latest_videos(channel_url: str, limit: int, config: dict[str, Any] | None = None) -> list[dict[str, str]]:
+def youtube_locale_args(lang_code: str | None) -> list[str]:
+    """
+    Argumentos para forçar o yt-dlp/YouTube a responder no idioma alvo,
+    evitando que o YouTube devolva o título traduzido para inglês quando o
+    dono do canal cadastra múltiplos títulos.
+    """
+    lc = (lang_code or "").strip().lower()
+    if not lc:
+        return []
+    return [
+        "--extractor-args", f"youtube:lang={lc}",
+        "--extractor-args", f"youtubetab:lang={lc}",
+        "--add-header", f"Accept-Language:{lc}",
+    ]
+
+
+def fetch_latest_videos(channel_url: str, limit: int, config: dict[str, Any] | None = None,
+                        lang_code: str | None = None) -> list[dict[str, str]]:
     """
     Retorna [{ 'id': 'xxxx', 'url': 'https://www.youtube.com/watch?v=xxxx', 'title': '...' }, ...]
     usando yt-dlp em modo flat-playlist (rápido, sem baixar nada).
+
+    `lang_code` (ex: "it", "es") força o YouTube a devolver o título no idioma
+    original do canal em vez de uma tradução automática para inglês.
     """
     videos_url = channel_url.rstrip("/") + "/videos"
     cmd = [
         sys.executable, "-m", "yt_dlp",
         "--flat-playlist",
         "--playlist-end", str(limit),
-        "--print", "%(id)s|%(title)s",
+        "--print", "%(id)s|%(duration)s|%(title)s",
         "--no-warnings",
         "--quiet",
+        *youtube_locale_args(lang_code),
         *yt_dlp_cookie_args(config),
         videos_url,
     ]
@@ -235,17 +256,137 @@ def fetch_latest_videos(channel_url: str, limit: int, config: dict[str, Any] | N
     for line in decode_process_output(result.stdout).strip().splitlines():
         if not line or "|" not in line:
             continue
-        vid_id, _, title = line.partition("|")
+        parts = line.split("|", 2)
+        if len(parts) < 3:
+            continue
+        vid_id, duration_raw, title = parts
         vid_id = vid_id.strip()
         if not re.fullmatch(r"[A-Za-z0-9_-]{6,15}", vid_id):
             continue
+        duration: int | None
+        try:
+            duration = int(float(duration_raw.strip())) if duration_raw.strip() not in ("", "NA") else None
+        except (ValueError, TypeError):
+            duration = None
         videos.append({
             "id": vid_id,
             "url": f"https://www.youtube.com/watch?v={vid_id}",
             "title": title.strip(),
             "thumbnail": youtube_thumbnail_url(vid_id),
+            "duration": duration,
         })
+
+    # O extractor `youtubetab` (pagina de canal) ignora o arg `lang`, entao a
+    # flat-playlist retorna titulos em ingles quando o dono cadastra titulos
+    # multi-idioma. Refazemos uma consulta por video — desta vez no extractor
+    # `youtube` (que respeita lang) — para obter o titulo no idioma original.
+    if lang_code and videos:
+        localized = fetch_localized_titles(
+            [v["url"] for v in videos], lang_code, config
+        )
+        for v in videos:
+            new_title = localized.get(v["id"])
+            if new_title and new_title != v["title"]:
+                log.info("    Titulo localizado [%s]: %s -> %s",
+                         lang_code, v["title"][:50], new_title[:50])
+                v["title"] = new_title
     return videos
+
+
+def fetch_localized_titles(video_urls: list[str], lang_code: str,
+                           config: dict[str, Any] | None = None) -> dict[str, str]:
+    """
+    Consulta yt-dlp por video (extractor `youtube`, que respeita `lang`) e
+    devolve { video_id: titulo_no_idioma }. Falhas individuais sao ignoradas.
+    """
+    if not video_urls:
+        return {}
+    cmd = [
+        sys.executable, "-m", "yt_dlp",
+        "--print", "%(id)s|%(title)s",
+        "--skip-download",
+        "--no-warnings",
+        "--quiet",
+        "--ignore-errors",
+        *youtube_locale_args(lang_code),
+        *yt_dlp_cookie_args(config),
+        *video_urls,
+    ]
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=False,
+            timeout=max(30, 15 * len(video_urls)),
+            env=yt_dlp_env(),
+        )
+    except subprocess.TimeoutExpired:
+        log.warning("    Timeout ao buscar titulos localizados (%s)", lang_code)
+        return {}
+
+    titles: dict[str, str] = {}
+    for line in decode_process_output(result.stdout).splitlines():
+        if "|" not in line:
+            continue
+        vid_id, _, title = line.partition("|")
+        vid_id = vid_id.strip()
+        title = title.strip()
+        if re.fullmatch(r"[A-Za-z0-9_-]{6,15}", vid_id) and title:
+            titles[vid_id] = title
+    return titles
+
+
+def format_seconds(seconds: int | None) -> str:
+    if seconds is None:
+        return "??:??"
+    m, s = divmod(int(seconds), 60)
+    h, m = divmod(m, 60)
+    if h:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
+
+def filter_videos_by_duration(videos: list[dict[str, Any]], canal: dict[str, Any],
+                              config: dict[str, Any]) -> list[dict[str, Any]]:
+    """
+    Filtra `videos` mantendo apenas os que estao dentro de [min, max] segundos.
+    Limites efetivos: override do canal > default do config.
+    Videos sem duracao conhecida sao mantidos (a duracao real sera vista no momento da legenda).
+    """
+    def _to_int(value: Any) -> int | None:
+        if value is None or value == "":
+            return None
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    min_s = _to_int(canal.get("duracao_min_segundos"))
+    if min_s is None:
+        min_s = _to_int(config.get("duracao_min_segundos"))
+    max_s = _to_int(canal.get("duracao_max_segundos"))
+    if max_s is None:
+        max_s = _to_int(config.get("duracao_max_segundos"))
+
+    if min_s is None and max_s is None:
+        return videos
+
+    kept = []
+    for v in videos:
+        d = v.get("duration")
+        if d is None:
+            kept.append(v)
+            continue
+        if min_s is not None and d < min_s:
+            log.info("  Ignorado por duracao curta (%s < %s): %s",
+                     format_seconds(d), format_seconds(min_s), v["title"][:60])
+            continue
+        if max_s is not None and d > max_s:
+            log.info("  Ignorado por duracao longa (%s > %s): %s",
+                     format_seconds(d), format_seconds(max_s), v["title"][:60])
+            continue
+        kept.append(v)
+    return kept
 
 
 def youtube_thumbnail_url(video_id: str) -> str:
@@ -313,12 +454,94 @@ def fetch_subtitles(video_id: str, video_url: str, lang_code: str, out_dir: Path
     f = try_download(auto=False)
     if f:
         log.info("    Legendas humanas encontradas: %s", f.name)
+        dedupe_vtt_rolling_captions(f)
         return f
     f = try_download(auto=True)
     if f:
         log.info("    Legendas auto-geradas encontradas: %s", f.name)
+        dedupe_vtt_rolling_captions(f)
         return f
     return None
+
+
+_VTT_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def _strip_prefix_overlap(prev: str, curr: str) -> str:
+    """Se `curr` começa com um sufixo de `prev`, retorna `curr` sem essa parte."""
+    if not prev or not curr:
+        return curr
+    max_overlap = min(len(prev), len(curr))
+    for n in range(max_overlap, 0, -1):
+        if prev.endswith(curr[:n]):
+            return curr[n:].lstrip()
+    return curr
+
+
+def dedupe_vtt_rolling_captions(vtt_path: Path) -> None:
+    """
+    Remove o efeito de "rolling captions" das legendas auto-geradas do YouTube
+    (e overlaps similares produzidos por Whisper). Cada cue é comparado com o
+    anterior e o sufixo repetido é descartado. Cues totalmente contidos são
+    removidos. Reescreve o arquivo no lugar.
+    """
+    try:
+        content = vtt_path.read_text(encoding="utf-8")
+    except Exception as exc:
+        log.warning("    Falha ao ler VTT para dedup: %s", exc)
+        return
+
+    blocks: list[list[str]] = []
+    current: list[str] = []
+    for line in content.splitlines():
+        if line.strip() == "":
+            if current:
+                blocks.append(current)
+                current = []
+        else:
+            current.append(line)
+    if current:
+        blocks.append(current)
+
+    out_blocks: list[str] = []
+    prev_text = ""
+    kept_cues = 0
+    dropped_cues = 0
+
+    for block in blocks:
+        timing_idx = next((i for i, ln in enumerate(block) if "-->" in ln), None)
+        if timing_idx is None:
+            out_blocks.append("\n".join(block))
+            continue
+
+        cue_id_lines = block[:timing_idx]
+        timing = block[timing_idx]
+        text_lines = block[timing_idx + 1:]
+
+        raw_text = "\n".join(_VTT_TAG_RE.sub("", ln) for ln in text_lines)
+        text = re.sub(r"\s+", " ", raw_text).strip()
+        if not text:
+            dropped_cues += 1
+            continue
+
+        new_text = _strip_prefix_overlap(prev_text, text)
+        prev_text = text
+
+        if not new_text:
+            dropped_cues += 1
+            continue
+
+        cue_block = []
+        cue_block.extend(cue_id_lines)
+        cue_block.append(timing)
+        cue_block.append(new_text)
+        out_blocks.append("\n".join(cue_block))
+        kept_cues += 1
+
+    vtt_path.write_text("\n\n".join(out_blocks) + "\n", encoding="utf-8")
+    if dropped_cues:
+        log.info("    VTT dedup: %d cues mantidos, %d cues redundantes removidos",
+                 kept_cues, dropped_cues)
 
 
 def download_audio_for_transcription(video_id: str, video_url: str, out_dir: Path,
@@ -413,6 +636,7 @@ def transcribe_video_to_vtt(video: dict[str, str], lang_code: str, out_dir: Path
     vtt_file = out_dir / f"{video['id']}.transcrito.{lang_code}.vtt"
     vtt_file.write_text(response.text, encoding="utf-8")
     log.info("    Transcricao por IA gerada: %s", vtt_file.name)
+    dedupe_vtt_rolling_captions(vtt_file)
     return vtt_file
 
 
@@ -630,9 +854,14 @@ def run_import(config: dict[str, Any], history: dict[str, dict[str, Any]]) -> No
 
         limit_per_channel = int(canal.get("videos_por_execucao", config.get("videos_por_canal", 1)))
         log.info("Canal: %s [%s]", canal["nome"], canal["idioma"])
-        latest = fetch_latest_videos(canal["url"], limit_per_channel, config)
+        latest = fetch_latest_videos(canal["url"], limit_per_channel, config,
+                                     lang_code=canal.get("lang_code"))
         if not latest:
             log.warning("  Sem videos retornados (canal vazio ou bloqueado).")
+            continue
+        latest = filter_videos_by_duration(latest, canal, config)
+        if not latest:
+            log.info("  Nenhum video dentro da faixa de duracao configurada.")
             continue
         for v in latest:
             v["canal"] = canal["nome"]

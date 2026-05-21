@@ -96,6 +96,8 @@
         <label>Código LingQ<input id="channelLangCode" required placeholder="en"></label>
         <label>URL do canal<input id="channelUrl" required placeholder="https://www.youtube.com/@canal"></label>
         <label>Vídeos por execução<input id="channelLimit" type="number" min="1" value="1" required></label>
+        <label>Duração mínima (mm:ss)<input id="channelDurationMin" type="text" placeholder="5:00" pattern="^\d{1,3}:[0-5]\d$"></label>
+        <label>Duração máxima (mm:ss)<input id="channelDurationMax" type="text" placeholder="20:00" pattern="^\d{1,3}:[0-5]\d$"></label>
         <label class="check"><input id="channelActive" type="checkbox" checked> Ativo</label>
         <menu>
           <button id="cancelChannel" type="button">Cancelar</button>

@@ -65,6 +65,18 @@ def normalize_channel(channel: dict[str, Any]) -> dict[str, Any]:
     normalized.setdefault("ativo", True)
     normalized.setdefault("videos_por_execucao", 1)
     normalized["videos_por_execucao"] = max(1, int(normalized.get("videos_por_execucao") or 1))
+
+    def _coerce_duration(value: Any) -> int | None:
+        if value is None or value == "":
+            return None
+        try:
+            n = int(value)
+        except (TypeError, ValueError):
+            return None
+        return max(0, n)
+
+    normalized["duracao_min_segundos"] = _coerce_duration(normalized.get("duracao_min_segundos"))
+    normalized["duracao_max_segundos"] = _coerce_duration(normalized.get("duracao_max_segundos"))
     return normalized
 
 

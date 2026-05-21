@@ -16,6 +16,23 @@ const languageAliases = {
   fr: ["fr", "frances", "francês", "french"],
 };
 
+function secondsToMmss(seconds) {
+  if (seconds === null || seconds === undefined || seconds === "") return "";
+  const n = Number(seconds);
+  if (!Number.isFinite(n) || n < 0) return "";
+  const m = Math.floor(n / 60);
+  const s = Math.floor(n % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function mmssToSeconds(value) {
+  const trimmed = String(value ?? "").trim();
+  if (!trimmed) return null;
+  const match = trimmed.match(/^(\d{1,3}):([0-5]\d)$/);
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
@@ -126,6 +143,8 @@ function openDialog(channel = null) {
   $("#channelLangCode").value = channel?.lang_code || "";
   $("#channelUrl").value = channel?.url || "";
   $("#channelLimit").value = channel?.videos_por_execucao || 1;
+  $("#channelDurationMin").value = secondsToMmss(channel?.duracao_min_segundos ?? 300);
+  $("#channelDurationMax").value = secondsToMmss(channel?.duracao_max_segundos ?? 1200);
   $("#channelActive").checked = channel?.ativo ?? true;
   $("#channelDialog").showModal();
 }
@@ -142,6 +161,8 @@ async function saveChannel(event) {
     lang_code: $("#channelLangCode").value.trim(),
     url: $("#channelUrl").value.trim(),
     videos_por_execucao: Number($("#channelLimit").value),
+    duracao_min_segundos: mmssToSeconds($("#channelDurationMin").value),
+    duracao_max_segundos: mmssToSeconds($("#channelDurationMax").value),
     ativo: $("#channelActive").checked,
   };
 
