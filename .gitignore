@@ -8,3 +8,6 @@ logs/
 subs_tmp/
 youtube_cookies.txt
 .env
+__pycache__/
+*.pyc
+.claude/
